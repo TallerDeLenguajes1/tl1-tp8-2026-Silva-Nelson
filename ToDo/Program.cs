@@ -9,70 +9,51 @@ string? entrada;
 
 do
 {
-    Console.WriteLine("Ingrese la cantidad de tareas:");
-    entrada = Console.ReadLine();    
-} while (!int.TryParse(entrada, out n));
-
-for (int i = 0; i < n; i++)
-{
-    Tarea nuevaTarea = new Tarea();
-
-    // Console.WriteLine("Ingrese la duracion de la tarea:");
-    // entrada = Console.ReadLine();
-    nuevaTarea.TareaId = i;
-
-    Console.WriteLine("Ingrese una descripcion:");
+    MostrarTareas.Menu();
     entrada = Console.ReadLine();
-    nuevaTarea.Descripcion = entrada;
-    do
+    int.TryParse(entrada, out n);
+    switch (n)
     {
-        Console.WriteLine("Ingrese la duracion de la tarea:");
-        entrada = Console.ReadLine();   
-    } while (!(int.TryParse(entrada, out x) && (x >= 10 && x <= 100)));
-
-    nuevaTarea.Duracion = x;
-    tareasPendientes.Add(nuevaTarea);
-}
-
-//mostramos los objetos cargados en la lista
-Console.WriteLine();
-Console.WriteLine("----- MOSTRAMOS LAS TAREAS -----");
-Console.WriteLine();
-for (int i = 0; i < tareasPendientes.Count; i++)
-{
-    Console.WriteLine($"ID : {tareasPendientes[i].TareaId}");
-    Console.WriteLine($"DESCRIPCION : {tareasPendientes[i].Descripcion}");
-    Console.WriteLine($"DURACION : {tareasPendientes[i].Duracion}");
-}
-Console.WriteLine();
-Console.WriteLine("----- TAREAS REALIZADAS -----");
-Console.WriteLine();
-
-Console.WriteLine("¿Desea marcar una tarea como realizada?");
-entrada = Console.ReadLine();
-if (int.TryParse(entrada, out x))
-{
-    do
-    {   
-        Console.WriteLine("Ingrese la tarea que quiere marcar como realizada:");
-        entrada = Console.ReadLine();
-        foreach (Tarea t in tareasPendientes)
-        {
-            if (t.Descripcion == entrada)
+        case 1:
+            do
             {
-                tareaEncontrada = t;
-            }
-        }
-        if (tareaEncontrada != null)
-        {
-            tareasPendientes.Remove(tareaEncontrada);//devuelve un booleano
-            tareasRealizadas.Add(tareaEncontrada);
-        }else
-        { 
-            Console.WriteLine("No se encontro la tarea.");
-        }
-        Console.WriteLine("¿Desea realizar otra operacion?.Ingrese un numero para continuar");
-        entrada = Console.ReadLine();
-    } while (int.TryParse(entrada, out x));
+                Console.WriteLine("Ingrese la cantidad de tareas:");
+                entrada = Console.ReadLine();    
+            } while (!int.TryParse(entrada, out n));
+            CargarTareas.ComenzarCarga(tareasPendientes, n);
+        break;
+        case 2:
+            do
+            {   
+                Console.WriteLine("Ingrese la tarea que quiere marcar como realizada:");
+                entrada = Console.ReadLine();
+                CargarTareas.PasajeTareas(tareasPendientes, tareasRealizadas, entrada);
+                Console.WriteLine("¿Desea realizar otra operacion?.Ingrese un numero para continuar");
+                entrada = Console.ReadLine();
+            } while (int.TryParse(entrada, out x));        
+        break;
+        case 3:        
+            MostrarTareas.Mostrar(tareasPendientes);
+        break;
+        case 4:
+            MostrarTareas.Mostrar(tareasRealizadas);
+        break;
+        case 5:
+            do
+            {
+                Console.WriteLine("Ingrese la descripcion de la tarea que desea buscar:");
+                entrada = Console.ReadLine();
+                
+                MostrarTareas.MostrarTareasIngresadas(tareasPendientes, entrada);
 
-}
+                Console.WriteLine("¿Desea realizar otra operacion?.Ingrese un numero para continuar");
+                entrada = Console.ReadLine();
+            } while (int.TryParse(entrada, out x));
+        break;
+        default:
+            Console.WriteLine("Opcion no valida.");
+        break;
+    }
+    Console.WriteLine("¿Desea realizar otra operacion del menu?. Ingrese un numero para continuar.");
+    entrada = Console.ReadLine();
+} while (int.TryParse(entrada, out n));
